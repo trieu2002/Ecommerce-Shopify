@@ -45,8 +45,17 @@ const getOrderByUser = asyncHandler(async (req, res) => {
         data: rs ? rs : "Thất bại"
     })
 });
+const getOrderByAdmin = asyncHandler(async (req, res) => {
+    const rs = await Order.find();
+    return res.status(200).json({
+        success: rs ? true : false,
+        data: rs ? rs : "Thất bại"
+    })
+})
 
 module.exports = {
     createOrder,
-    updatedStatus
+    updatedStatus,
+    getOrderByUser,
+    getOrderByAdmin
 }
