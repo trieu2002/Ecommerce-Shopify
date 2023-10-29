@@ -1,5 +1,6 @@
 const Order = require("../model/Order");
 const asyncHandler = require("express-async-handler");
+const Coupon = require("../model/Coupon");
 const User = require("../model/User");
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
@@ -12,8 +13,15 @@ const createOrder = asyncHandler(async (req, res) => {
         color: el.color
     }));
     let total = userCart?.cart?.reduce((sum, el) => el.products.price * el.quantity + sum, 0);
-    if (coupon) total = Math.round(total * (1 - +coupon / 100) / 100) * 1000;
-    const rs = await Order.create({ products, total, orderBy: _id });
+    let createdData = { products, total, orderBy: _id };
+    if (coupon) {
+        const selectedCoupon = await Coupon.findById(coupon);
+
+        total = Math.round(total * (1 - +selectedCoupon.discount / 100) / 100) * 1000 || total;
+        createdData.total = total;
+        createdData.coupon = coupon;
+    }
+    const rs = await Order.create(createdData);
     return res.status(200).json({
         success: rs ? true : false,
         data: rs ? rs : "Thất bại"
