@@ -36,7 +36,16 @@ const updatedStatus = asyncHandler(async (req, res) => {
         success: rs ? true : false,
         data: rs ? rs : "Thất bại"
     })
-})
+});
+const getOrderByUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const rs = await Order.findById({ orderBy: _id });
+    return res.status(200).json({
+        success: rs ? true : false,
+        data: rs ? rs : "Thất bại"
+    })
+});
+
 module.exports = {
     createOrder,
     updatedStatus
