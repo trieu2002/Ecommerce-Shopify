@@ -1,4 +1,4 @@
-const { register, login, getProfile, refreshToken, logout, forgotPassword, resetPassword, getUser, deleteUser, updateUserByAdmin, updateUser } = require("../controller/User");
+const { register, login, getProfile, refreshToken, logout, forgotPassword, resetPassword, getUser, deleteUser, updateUserByAdmin, updateUser, updatedAddressUser, updatedCartUser } = require("../controller/User");
 const { verifyToken, isAdmin } = require("../middleware/verify_token");
 const router = require("express").Router();
 
@@ -9,12 +9,13 @@ router.post("/refresh", refreshToken);
 router.get("/logout", verifyToken, logout);
 router.get("/forgot", forgotPassword);
 router.put("/reset-password", resetPassword);
-
-
+router.put("/cart", [verifyToken], updatedCartUser);
+router.put("/address", [verifyToken], updatedAddressUser);
 router.get("/", [verifyToken, isAdmin], getUser);
 router.delete("/:id", [verifyToken, isAdmin], deleteUser);
 router.put("/profile", [verifyToken], updateUser);
 router.put("/:id", [verifyToken, isAdmin], updateUserByAdmin);
+
 
 
 module.exports = router;

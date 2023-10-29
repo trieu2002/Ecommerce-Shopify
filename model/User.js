@@ -53,16 +53,24 @@ const userSchema = new mongoose.Schema({
     /**
      * Chứa đựng thông tin của các sản phẩm đã mua
      */
-    cart: {
-        type: Array,
-        default: []
-    },
+    cart: [
+        {
+            products: { type: mongoose.Schema.ObjectId, ref: "Product" },
+            quantity: Number,
+            color: String
+        },
+
+
+    ],
     /**
      * Địa chỉ
      */
-    address: [
-        { type: mongoose.Types.ObjectId, ref: "Address" }
-    ],
+    address: {
+        type: Array,
+        default: []
+    },
+
+
     /**
      * Danh sách sản phẩm yêu thích nối với bảng Product
      */

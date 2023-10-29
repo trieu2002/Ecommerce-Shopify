@@ -112,7 +112,20 @@ const dislikeBlog = asyncHandler(async (req, res) => {
         })
     }
 
-})
+});
+const uploadImageProduct = asyncHandler(async (req, res) => {
+    // link tham khảo pus multiple object to mongooose
+    // link https://stackoverflow.com/questions/58277545/how-to-push-multiple-objects-in-array-using-push-mongoose
+
+    const { id } = req.params;
+    if (!req.file) throw new Error("Missing input");
+    const response = await Blog.findByIdAndUpdate(id, { images: req.file.path }, { new: true });
+    return res.status(200).json({
+        success: response ? true : false,
+        data: response ? response : 'Không thể upload ảnh',
+
+    });
+});
 module.exports = {
     createBlog,
     updatedBlog,
@@ -120,5 +133,6 @@ module.exports = {
     deletedBlog,
     likeBlog,
     dislikeBlog,
-    getOneBlog
+    getOneBlog,
+    uploadImageProduct
 }

@@ -219,6 +219,45 @@ const updateUser = asyncHandler(async (req, res) => {
         users: response ? "Cập nhật thành công" : "Cập nhật thất bại"
     })
 });
+const updatedAddressUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    if (!req.body.address) throw new Error("Missing input");
+    const response = await User.findByIdAndUpdate(_id, { $push: { address: req.body.address } }, { new: true });
+    return res.status(200).json({
+        success: response ? true : false,
+        users: response ? response : "Cập nhật thất bại"
+    })
+});
+const updatedCartUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { pid, quantity, color } = req.body;
+    if (!pid || !quantity || !color) throw new Error("Missing Input");
+    const cart = await User.findById(_id).select("cart");
+    console.log('<<<<<<< cart >>>>>>>', cart);
+    const cartAlready = cart?.cart.find(el => el.products.toString() === pid);
+    console.log('<<<<<<< cartAlready >>>>>>>', cartAlready);
+    if (cartAlready) {
+        if (cartAlready.color === color) {
+            const response = await User.updateOne({ cart: { $elemMatch: cartAlready } }, { $set: { "cart.$.quantity": quantity } }, { new: true });
+            return res.status(200).json({
+                success: response ? true : false,
+                users: response ? response : "Cập nhật thất bại"
+            })
+        } else {
+            const response = await User.findByIdAndUpdate(_id, { $push: { cart: { products: pid, quantity, color } } }, { new: true });
+            return res.status(200).json({
+                success: response ? true : false,
+                users: response ? response : "Cập nhật thất bại"
+            })
+        }
+    } else {
+        const response = await User.findByIdAndUpdate(_id, { $push: { cart: { products: pid, quantity, color } } }, { new: true });
+        return res.status(200).json({
+            success: response ? true : false,
+            users: response ? response : "Cập nhật thất bại"
+        })
+    }
+});
 module.exports = {
     register,
     login,
@@ -230,5 +269,7 @@ module.exports = {
     getUser,
     deleteUser,
     updateUserByAdmin,
-    updateUser
+    updateUser,
+    updatedAddressUser,
+    updatedCartUser
 }

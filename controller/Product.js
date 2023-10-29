@@ -153,7 +153,7 @@ const uploadImageProduct = asyncHandler(async (req, res) => {
         data: response ? response : 'Không thể upload ảnh',
 
     });
-})
+});
 module.exports = {
     createProduct,
     getProductDetail,
