@@ -19,6 +19,10 @@ const getProductDetail = asyncHandler(async (req, res) => {
         data: product ? product : 'Lấy thất bại'
     })
 });
+/**
+ * Link tham khảo làm
+ * https://jeffdevslife.com/p/2-mongodb-query-of-advanced-filtering-sorting-limit-field-and-pagination-with-mongoose/
+ */
 // filtering,sort,pagination
 const getAllProduct = asyncHandler(async (req, res) => {
     // copy tất các các query sang 1 ô nhớ khác
